@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Contact Cards App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="root"></div>
+
+  
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  
+  <script type="text/babel">
+    const { useState } = React;
+
+    const ContactForm = ({ onAddContact }) => {
+      const [name, setName] = useState('');
+      const [email, setEmail] = useState('');
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!name || !email) return;
+        onAddContact({ name, email });
+        setName('');
+        setEmail('');
+      };
+
+      return (
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button type="submit">Add Contact</button>
+        </form>
+      );
+    };
+
+    const ContactCard = ({ contact }) => (
+      <div className="card">
+        <h4>{contact.name}</h4>
+        <p>{contact.email}</p>
+      </div>
+    );
+
+    const UserList = ({ contacts }) => (
+      <div>
+        {contacts.map((contact, index) => (
+          <ContactCard key={index} contact={contact} />
+        ))}
+      </div>
+    );
+
+    const App = () => {
+  const [contacts, setContacts] = useState([]);
+
+  const addContact = (contact) => {
+    setContacts((prev) => [...prev, contact]);
+  };
+
+  return (
+    <div className="container">
+      <h1>CONTACT CARDS APP</h1>
+      <ContactForm onAddContact={addContact} />
+      <UserList contacts={contacts} />
+    </div>
+  );
+};
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
